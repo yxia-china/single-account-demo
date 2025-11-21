@@ -1,18 +1,34 @@
-name: Deploy to Staging
+name: Deploy
 
 on:
   workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment'
+        required: true
+        default: 'staging'
+        type: choice
+        options:
+          - staging
+          - production
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: staging   # 关联到staging环境
+    environment: ${{ github.event.inputs.environment }}
 
     steps:
     - name: Checkout
       uses: actions/checkout@v4
 
-    - name: Deploy
-      run: echo "Deploying to staging..."
-      env:
-        DB_URL: ${{ secrets.STAGING_DB_URL }}
+    - name: Get Environment Variables
+      run: |
+        echo "Deploying to ${{ github.event.inputs.environment }}"
+        if [ "${{ github.event.inputs.environment }}" = "production" ]; then
+          echo "DB_URL=${{ secrets.PRODUCTION_DB_URL }}" >> .env
+        else
+          echo "DB_URL=${{ secrets.STAGING_DB_URL }}" >> .env
+        fi
+
+    - name: Print .env (for demo)
+      run: cat .env
