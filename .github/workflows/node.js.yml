@@ -18,6 +18,11 @@ jobs:
           echo "src directory:"
           ls -R src
 
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
       - name: Install dependencies
         working-directory: ./src
         run: npm install
