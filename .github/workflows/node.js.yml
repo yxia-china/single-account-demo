@@ -11,6 +11,13 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Debug directory structure
+        run: |
+          echo "Root directory:"
+          ls -R
+          echo "src directory:"
+          ls -R src
+
       - name: Install dependencies
         working-directory: ./src
         run: npm install
